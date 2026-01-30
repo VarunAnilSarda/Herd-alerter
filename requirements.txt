@@ -1,0 +1,12 @@
+kafka-python==2.1.0
+aiokafka==1.9.0
+faust==1.10.4
+websockets==12.0
+pandas==2.1.0
+numpy==1.26.2
+requests==2.31.0
+loguru==0.7.0
+python-dotenv==1.0.0
+ujson==5.9.0
+schedule==1.2.0
+pytest==8.3.0

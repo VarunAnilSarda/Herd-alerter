@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: herd-alerter-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: herd-alerter-backend
+  template:
+    metadata:
+      labels:
+        app: herd-alerter-backend
+    spec:
+      containers:
+        - name: backend
+          image: herd-alerter-backend:latest # build & push to registry before applying
+          ports:
+            - containerPort: 8000
+            - containerPort: 6789
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka:9092"

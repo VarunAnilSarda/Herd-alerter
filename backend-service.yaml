@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: herd-alerter-backend
+spec:
+  selector:
+    app: herd-alerter-backend
+  ports:
+    - name: http
+      port: 8000
+      targetPort: 8000
+    - name: websocket
+      port: 6789
+      targetPort: 6789
+  type: NodePort # or LoadBalancer if on cloud

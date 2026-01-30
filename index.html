@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Herd Dashboard - 4 Charts</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #eaf3fc;
+        padding: 20px;
+    }
+    h1 {
+        text-align: center;
+        color: #0d47a1;
+    }
+    .slicer {
+        margin: 20px 0;
+        text-align: center;
+    }
+    .dashboard {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        justify-content: center;
+    }
+    .chart-container {
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    }
+</style>
+</head>
+<body>
+
+<h1>Herd Dashboard (4 Charts)</h1>
+
+<div class="slicer">
+    <label for="regionFilter"><b>Filter by Region:</b></label>
+    <select id="regionFilter">
+        <option value="all">All</option>
+        <option value="north">North</option>
+        <option value="south">South</option>
+        <option value="east">East</option>
+        <option value="west">West</option>
+    </select>
+</div>
+
+<div class="dashboard">
+    <div class="chart-container"><canvas id="barChart"></canvas></div>
+    <div class="chart-container"><canvas id="pieChart"></canvas></div>
+    <div class="chart-container"><canvas id="lineChart"></canvas></div>
+    <div class="chart-container"><canvas id="scatterChart"></canvas></div>
+</div>
+
+<script>
+// Sample data
+let herdData = {north: 12, south: 18, east: 22, west: 9};
+let healthData = {good: 30, warning: 8, critical: 5};
+let tempData = [25, 28, 30, 27, 26, 29];
+let scatterData = [
+    {x: 1, y: 3}, {x: 2, y: 6}, {x: 3, y: 4},
+    {x: 4, y: 7}, {x: 5, y: 5}, {x: 6, y: 8}
+];
+
+// Common chart creator
+function createChart(ctx, type, labels, data, bgColors, title) {
+    return new Chart(ctx, {
+        type: type,
+        data: {
+            labels: labels,
+            datasets: [{
+                label: title,
+                data: data,
+                backgroundColor: bgColors,
+                borderColor: bgColors,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { title: { display: true, text: title } }
+        }
+    });
+}
+
+// Bar Chart (Herd Distribution)
+const barChart = createChart(
+    document.getElementById('barChart').getContext('2d'),
+    'bar',
+    ['North', 'South', 'East', 'West'],
+    [herdData.north, herdData.south, herdData.east, herdData.west],
+    ['#1565c0', '#42a5f5', '#64b5f6', '#bbdefb'],
+    'Herd Distribution by Region'
+);
+
+// Pie Chart (Health Status)
+const pieChart = new Chart(document.getElementById('pieChart').getContext('2d'), {
+    type: 'pie',
+    data: {
+        labels: ['Good', 'Warning', 'Critical'],
+        datasets: [{
+            data: [healthData.good, healthData.warning, healthData.critical],
+            backgroundColor: ['#2196f3', '#ffeb3b', '#f44336']
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { title: { display: true, text: 'Herd Health Status' } }
+    }
+});
+
+// Line Chart (Temperature Trend)
+const lineChart = new Chart(document.getElementById('lineChart').getContext('2d'), {
+    type: 'line',
+    data: {
+        labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6'],
+        datasets: [{
+            label: 'Temperature (°C)',
+            data: tempData,
+            borderColor: '#0d47a1',
+            backgroundColor: '#90caf9',
+            fill: true,
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { title: { display: true, text: 'Temperature Trend' } }
+    }
+});
+
+// Scatter Chart (Activity vs Time)
+const scatterChart = new Chart(document.getElementById('scatterChart').getContext('2d'), {
+    type: 'scatter',
+    data: {
+        datasets: [{
+            label: 'Activity Scatter',
+            data: scatterData,
+            backgroundColor: '#1e88e5'
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { title: { display: true, text: 'Activity Scatter Plot' } },
+        scales: {
+            x: { title: { display: true, text: 'Time (hours)' } },
+            y: { title: { display: true, text: 'Activity Level' } }
+        }
+    }
+});
+
+// Region Filter (affects bar chart)
+document.getElementById('regionFilter').addEventListener('change', function() {
+    const region = this.value;
+    if (region === 'all') {
+        barChart.data.datasets[0].data = [herdData.north, herdData.south, herdData.east, herdData.west];
+    } else {
+        barChart.data.datasets[0].data = [
+            region === 'north' ? herdData.north : 0,
+            region === 'south' ? herdData.south : 0,
+            region === 'east' ? herdData.east : 0,
+            region === 'west' ? herdData.west : 0
+        ];
+    }
+    barChart.update();
+});
+</script>
+
+</body>
+</html>

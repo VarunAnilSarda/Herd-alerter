@@ -1,0 +1,17 @@
+import json
+
+# Example: count events by alert_type in events.json
+try:
+    with open("../collector/events.json") as f:
+        events = json.load(f)
+
+    summary = {}
+    for e in events:
+        t = e['alert_type']
+        summary[t] = summary.get(t, 0) + 1
+
+    print("Alert summary:")
+    for k, v in summary.items():
+        print(f"{k}: {v}")
+except FileNotFoundError:
+    print("Error: events.json not found. Run event_generator.py first.")

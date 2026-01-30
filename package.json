@@ -1,0 +1,17 @@
+{
+  "name": "gopin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "test.js",
+  "scripts": {
+    "start": "node test.js",
+    "build": "echo Build successful!"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "kafkajs": "^2.2.4"
+  }
+}
